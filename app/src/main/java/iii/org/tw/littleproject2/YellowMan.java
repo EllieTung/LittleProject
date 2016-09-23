@@ -147,7 +147,8 @@ public class YellowMan extends View{
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if(!isInit)init();
-
+//        int i=2,j=1;
+//        canvas.drawBitmap(bmpBlock,i*blockW,j*blockH,null);
 
 
         for(int i=0;i<wall.length;i++){
@@ -157,13 +158,43 @@ public class YellowMan extends View{
                 }
             }
         }
-
-
-        canvas.drawBitmap(turningImage(currentDirect),pmX,pmY,null);
-
-
-
-
+        if(currentDirect==1){
+            int x=(int)((pmX+pmW)/blockW);
+            int y=(int)((pmY+pmH)/blockH);
+            if(wall[x][y]==1){
+                canvas.drawBitmap(turningImage(currentDirect),x*blockW-pmW,pmY,null);
+                pmX-=dx;
+            }else{
+                canvas.drawBitmap(turningImage(currentDirect),pmX,pmY,null);
+            }
+        }else if(currentDirect==2){
+            int x=(int)((pmX+pmH)/blockW);
+            int y=(int)(pmY/blockH);
+            if(wall[x][y]==1){
+                canvas.drawBitmap(turningImage(currentDirect),pmX,y*blockH,null);
+                pmY-=dy;
+            }else{
+                canvas.drawBitmap(turningImage(currentDirect),pmX,pmY,null);
+            }
+        }else if(currentDirect==3){
+            int x=(int)(pmX/blockW);
+            int y=(int)((pmY+pmH)/blockH);
+            if(wall[x][y]==1){
+                canvas.drawBitmap(turningImage(currentDirect),x*blockW,pmY,null);
+                pmX-=dx;
+            }else{
+                canvas.drawBitmap(turningImage(currentDirect),pmX,pmY,null);
+            }
+        }else if(currentDirect==4){
+            int x=(int)((pmX+pmH)/blockW);
+            int y=(int)((pmY+pmW)/blockH);
+            if(wall[x][y]==1){
+                canvas.drawBitmap(turningImage(currentDirect),pmX,y*blockH-pmW,null);
+                pmX-=dx;
+            }else{
+                canvas.drawBitmap(turningImage(currentDirect),pmX,pmY,null);
+            }
+        }
     }
     private class YMTask extends TimerTask{
         @Override
