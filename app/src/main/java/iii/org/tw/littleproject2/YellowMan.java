@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -56,6 +57,7 @@ public class YellowMan extends View{
         matrix=new Matrix();
         timer=new Timer();
         turningNumber=1;
+
     }
     Timer getTimer(){
         return timer;
@@ -92,17 +94,17 @@ public class YellowMan extends View{
                 if(wall[i][j]==2){
                     pmX=blockW*i;
                     pmY=blockH*j-2*pmH/3;
+                }else if(wall[i][j]==3){
+                    moneyRemain++;
                 }
             }
         }
+        Log.d("Ellie",""+moneyRemain);
 
 
         timer.schedule(new YMTask(),0,100);
 
         isInit=true;
-
-
-
     }
     private Bitmap resizer(Bitmap bmp,float newW,float newH,float theta){
         matrix.reset();
@@ -181,10 +183,18 @@ public class YellowMan extends View{
         if(currentDirect==1){
             int x=(int)((pmX+pmW)/blockW);
             int y=(int)((pmY)/blockH);
+            int x2=(int)((pmX+pmW/2)/blockW);
+
             if(wall[x][y+1]==1||pmX+pmW>=viewW){
                 canvas.drawBitmap(turningImage(currentDirect),x*blockW-pmW,pmY+8*pmH/9,null);
                 pmX-=dx;
-            }else{
+            }
+            else if(wall[x2][y]==3){
+                wall[x2][y]=0;
+                moneyRemain--;
+                Log.d("Ellie",""+moneyRemain);
+
+            } else{
                 canvas.drawBitmap(turningImage(currentDirect),pmX,pmY+8*pmH/9,null);
             }
         }else if(currentDirect==2){
@@ -226,5 +236,4 @@ public class YellowMan extends View{
             postInvalidate();
         }
     }
-
 }
