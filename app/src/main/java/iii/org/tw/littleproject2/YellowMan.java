@@ -17,13 +17,14 @@ import java.util.TimerTask;
  * Created by YunHua on 9/23/16.
  */
 public class YellowMan extends View{
-    private Bitmap bmpImage,pmr,pmr2,pml,pml2,pmu,pmu2,pmd,pmd2,bmpBlock;
+    private Bitmap bmpImage,pmr,pmr2,pml,pml2,pmu,pmu2,pmd,pmd2,bmpBlock,bmpCoin,bmpCoin2;
     private Resources res;
     private Matrix matrix;
     public float viewW,viewH,pmW,pmH,pmX,pmY,blockW,blockH,dx,dy;
     private boolean isInit;
     public int currentDirect,turningNumber;
     private Timer timer;
+    private int moneyRemain;
     private int wall[][]={  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -31,20 +32,20 @@ public class YellowMan extends View{
                             {1,0,0,1,0,1,0,0,1,0,1,0,1,0,0,0},
                             {1,0,0,1,0,1,0,0,1,0,1,0,1,0,0,0},
                             {1,0,0,1,0,1,0,0,1,0,1,0,1,0,0,0},
-                            {1,0,0,1,0,1,0,0,1,0,1,0,1,0,0,0},
+                            {1,0,0,1,3,1,0,0,1,3,1,0,1,0,0,0},
                             {1,0,0,1,0,1,0,0,1,0,1,0,1,0,0,0},
                             {1,0,0,1,0,1,0,0,0,0,1,0,1,0,0,0},
-                            {1,0,0,1,0,1,0,0,0,0,1,0,1,0,0,0},
-                            {1,0,0,1,0,0,0,0,1,0,1,0,1,0,0,0},
+                            {1,0,0,1,3,1,0,0,0,0,1,0,1,0,0,0},
+                            {1,0,0,1,3,0,0,0,1,3,1,0,1,0,0,0},
                             {1,0,0,1,0,1,0,0,1,0,0,0,1,0,0,0},
-                            {1,0,0,1,0,1,0,0,1,0,1,0,1,0,0,0},
-                            {1,0,0,1,0,1,0,0,1,0,1,0,1,0,0,0},
+                            {1,0,0,1,3,1,0,0,1,0,1,0,1,0,0,0},
+                            {1,0,0,1,0,1,0,0,1,3,1,0,1,0,0,0},
                             {1,0,0,1,0,1,0,0,0,0,1,0,1,0,0,0},
                             {1,0,0,1,0,1,0,0,0,0,1,0,1,0,0,0},
-                            {1,0,0,1,0,1,0,0,1,0,1,0,1,0,0,0},
-                            {1,0,0,1,0,1,0,0,1,0,1,0,1,0,0,0},
-                            {0,0,0,1,0,1,0,0,1,0,1,0,1,0,0,0},
-                            {0,0,0,1,0,0,0,0,1,0,1,0,1,0,0,0},
+                            {1,0,0,1,3,1,0,0,1,3,1,0,1,0,0,0},
+                            {1,0,0,1,3,1,0,2,1,0,1,0,1,0,0,0},
+                            {0,0,0,0,3,1,0,0,1,0,1,0,1,0,0,0},
+                            {0,0,0,1,0,0,0,0,1,3,1,0,1,0,0,0},
                             {0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},};
@@ -64,8 +65,8 @@ public class YellowMan extends View{
         viewW=getWidth();
         blockH=viewH/16f;
         blockW=viewW/22f;
-        pmH=viewH/18f;
-        pmW=viewW/24f;
+        pmH=viewH/20f;
+        pmW=viewW/26f;
         pmr= BitmapFactory.decodeResource(res,R.drawable.pmr);
         pmr=resizer(pmr,pmW,pmH,0);
         pmr2=BitmapFactory.decodeResource(res,R.drawable.pmr2);
@@ -80,6 +81,21 @@ public class YellowMan extends View{
         pmd2=resizer(pmr2,pmW,pmH,90);
         bmpBlock=BitmapFactory.decodeResource(res,R.drawable.block);
         bmpBlock=resizer(bmpBlock,blockW,blockH,0);
+        bmpCoin=BitmapFactory.decodeResource(res,R.drawable.coin2);
+        bmpCoin=resizer(bmpCoin,blockW,blockH,0);
+        bmpCoin2=BitmapFactory.decodeResource(res,R.drawable.coin);
+        bmpCoin2=resizer(bmpCoin2,blockW,blockH,0);
+
+
+        for(int i=0;i<wall.length;i++){
+            for(int j=0;j<wall[i].length;j++){
+                if(wall[i][j]==2){
+                    pmX=blockW*i;
+                    pmY=blockH*j-2*pmH/3;
+                }
+            }
+        }
+
 
         timer.schedule(new YMTask(),0,100);
 
@@ -131,47 +147,52 @@ public class YellowMan extends View{
                     turningNumber = 1;
                     return pmd2;
                 }
+            case 5:
+                if (turningNumber == 1) {
+                    turningNumber = 2;
+                    return bmpCoin;
+                } else {
+                    turningNumber = 1;
+                    return bmpCoin2;
+                }
+
             default:
                 return pmr;
         }
 
-    }
-    private boolean walkable(float pmX,float pmY){
-
-
-
-        return true;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if(!isInit)init();
-//        int i=2,j=1;
-//        canvas.drawBitmap(bmpBlock,i*blockW,j*blockH,null);
 
 
         for(int i=0;i<wall.length;i++){
             for(int j=0;j<wall[i].length;j++){
                 if(wall[i][j]==1){
                     canvas.drawBitmap(bmpBlock,i*blockW,j*blockH,null);
+                }else if(wall[i][j]==3){
+                    canvas.drawBitmap(turningImage(5),i*blockW,j*blockH,null);
+
                 }
             }
         }
         if(currentDirect==1){
             int x=(int)((pmX+pmW)/blockW);
-            int y=(int)((pmY+pmH)/blockH);
-            if(wall[x][y]==1){
-                canvas.drawBitmap(turningImage(currentDirect),x*blockW-pmW,pmY,null);
+            int y=(int)((pmY)/blockH);
+            if(wall[x][y+1]==1||pmX+pmW>=viewW){
+                canvas.drawBitmap(turningImage(currentDirect),x*blockW-pmW,pmY+8*pmH/9,null);
                 pmX-=dx;
             }else{
-                canvas.drawBitmap(turningImage(currentDirect),pmX,pmY,null);
+                canvas.drawBitmap(turningImage(currentDirect),pmX,pmY+8*pmH/9,null);
             }
         }else if(currentDirect==2){
-            int x=(int)((pmX+pmH)/blockW);
+            int x=(int)((pmX+pmH)/blockW);//check bottom
             int y=(int)(pmY/blockH);
-            if(wall[x][y]==1){
-                canvas.drawBitmap(turningImage(currentDirect),pmX,y*blockH,null);
+            int x2=(int)((pmX)/blockW);
+            if(wall[x][y]==1||wall[x2][y]==1||pmY<=0){
+                canvas.drawBitmap(turningImage(currentDirect),pmX,(y+1)*blockH,null);
                 pmY-=dy;
             }else{
                 canvas.drawBitmap(turningImage(currentDirect),pmX,pmY,null);
@@ -179,18 +200,19 @@ public class YellowMan extends View{
         }else if(currentDirect==3){
             int x=(int)(pmX/blockW);
             int y=(int)((pmY+pmH)/blockH);
-            if(wall[x][y]==1){
-                canvas.drawBitmap(turningImage(currentDirect),x*blockW,pmY,null);
+            if(wall[x-1][y]==1||pmX<=0){
+                canvas.drawBitmap(turningImage(currentDirect),x*blockW,pmY+8*pmH/9,null);
                 pmX-=dx;
             }else{
-                canvas.drawBitmap(turningImage(currentDirect),pmX,pmY,null);
+                canvas.drawBitmap(turningImage(currentDirect),pmX,pmY+8*pmH/9,null);
             }
         }else if(currentDirect==4){
             int x=(int)((pmX+pmH)/blockW);
             int y=(int)((pmY+pmW)/blockH);
-            if(wall[x][y]==1){
+            int x2=(int)((pmX)/blockW);
+            if(wall[x][y]==1||wall[x2][y]==1||pmY+pmW>=viewH){
                 canvas.drawBitmap(turningImage(currentDirect),pmX,y*blockH-pmW,null);
-                pmX-=dx;
+                pmY-=dy;
             }else{
                 canvas.drawBitmap(turningImage(currentDirect),pmX,pmY,null);
             }
