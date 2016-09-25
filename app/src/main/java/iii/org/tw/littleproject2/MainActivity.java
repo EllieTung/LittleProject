@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
                                         R.raw.level5,R.raw.level6,R.raw.level7,R.raw.level8,R.raw.level9,
                                         R.raw.level10,R.raw.level11,R.raw.level12,R.raw.level13,R.raw.level14};
 
-
+    public int wall[][];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +91,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadLevel(int levelindex){
-        BufferedReader bf=new BufferedReader(new InputStreamReader(getResources().openRawResource(level[levelindex])));
+        wall=new int[24][16];
+        String temp1;
+        String[] temp2;
+        int w,i,j;
+        i=0;j=0;w=0;
+        try{
+        BufferedReader br=new BufferedReader(new InputStreamReader(getResources().openRawResource(level[levelindex])));
+        temp1=br.readLine();
+            while(temp1!=null){
+                temp2=temp1.split(",");
+                for(String temp3:temp2){
+                    w=Integer.parseInt(temp3.trim());
+                    wall[i][j++]=w;
+
+                }
+            }
+        }
+        catch(Exception e){
+            Log.d("Ellie", e.toString());
+        }
+
 
 
 
