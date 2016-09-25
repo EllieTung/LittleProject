@@ -1,21 +1,37 @@
 package iii.org.tw.littleproject2;
 
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 public class MainActivity extends AppCompatActivity {
     private Button goleft,goright,goup,godown;
     private YellowMan pacman;
+    private int levelindex;
+    public static final int level[]={  R.raw.level0,R.raw.level1,R.raw.level2,R.raw.level3,R.raw.level4,
+                                        R.raw.level5,R.raw.level6,R.raw.level7,R.raw.level8,R.raw.level9,
+                                        R.raw.level10,R.raw.level11,R.raw.level12,R.raw.level13,R.raw.level14};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findId();
+
+        Intent intent=getIntent();
+        levelindex=intent.getIntExtra("levelindex",0);
+
+
+
         goleft.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -73,6 +89,14 @@ public class MainActivity extends AppCompatActivity {
         goup=(Button)findViewById(R.id.goup);
         godown=(Button)findViewById(R.id.godown);
     }
+
+    private void loadLevel(int levelindex){
+        BufferedReader bf=new BufferedReader(new InputStreamReader(getResources().openRawResource(level[levelindex])));
+
+
+
+    }
+
     private void goRight(){
         pacman.currentDirect=1;
         if (pacman.dx < 30)

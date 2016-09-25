@@ -28,7 +28,8 @@ public class Welcome extends Activity{
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent().setClass(Welcome.this,MainActivity.class));
+                startActivity(new Intent().setClass(Welcome.this,Menu.class));
+                finish();
             } }, 3600);
 
     }
